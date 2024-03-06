@@ -7,5 +7,4 @@ export interface Todo {
 
 export interface OwnProps {
   todos: Todo[];
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }

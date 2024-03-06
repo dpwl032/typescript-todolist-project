@@ -1,23 +1,19 @@
 import React from "react";
 import { OwnProps } from "../model/Todo";
 import TodoItem from "./TodoItem";
+import { useAppDispatch } from "../app/hooks";
+import { deleteTodo } from "../redux/modules/todoSlice";
+import { toggleTodo } from "../redux/modules/todoSlice";
 
-const TodoList: React.FC<OwnProps> = ({ todos, setTodos }) => {
+const TodoList: React.FC<OwnProps> = ({ todos }) => {
+  const dispatch = useAppDispatch();
+
   const deleteItem = (id: string) => {
-    const newTodos = todos.filter((item) => item.id !== id);
-    setTodos(newTodos);
+    dispatch(deleteTodo(id));
   };
 
   const toggleItem = (id: string) => {
-    const newTodos = todos.map((item) => {
-      if (item.id === id) {
-        return { ...item, isDone: !item.isDone };
-      }
-      return item;
-    });
-
-    setTodos(newTodos);
-    console.log(newTodos);
+    dispatch(toggleTodo(id));
   };
 
   return (
