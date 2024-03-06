@@ -1,13 +1,18 @@
 import React from "react";
 import { useState } from "react";
-import { Todo } from "../model/Todo";
 import TodoList from "./TodoList";
 import { v4 as uuidv4 } from "uuid";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../redux/modules/todoSlice";
+import { AppDispatch } from "../redux/config/configStore";
+import { useAppSelector } from "../app/hooks";
 
 const TodoForm = () => {
+  const todos = useAppSelector((state) => state.todos.todos);
+  const useAppDispatch = () => useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [todos, setTodos] = useState<Todo[]>([]);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
@@ -21,21 +26,22 @@ const TodoForm = () => {
     }
   };
 
-  const newTodo: Todo = {
-    id: uuidv4(),
-    title,
-    content,
-    isDone: false,
-  };
-
   const onClickHandler = () => {
-    setTodos([...todos, newTodo]);
+    dispatch(
+      addTodo({
+        id: uuidv4(),
+        title,
+        content,
+        isDone: false,
+      })
+    );
+
     setTitle("");
     setContent("");
   };
 
-  const workingTodos = todos.filter((todo) => todo.isDone === false);
-  const doneTodos = todos.filter((todo) => todo.isDone === true);
+  const workingTodos = todos.filter((todo) => !todo.isDone);
+  const doneTodos = todos.filter((todo) => todo.isDone);
 
   return (
     <>
@@ -45,12 +51,12 @@ const TodoForm = () => {
       <input type="text" name="content" value={content} onChange={onChange} />
       <button onClick={onClickHandler}>등록</button>
       <div>Working</div>
-      <TodoList todos={workingTodos} setTodos={setTodos} />
+      <TodoList todos={workingTodos} />
       <br />
       <br />
       <br />
       <div>Done</div>
-      <TodoList todos={doneTodos} setTodos={setTodos} />
+      <TodoList todos={doneTodos} />
     </>
   );
 };
