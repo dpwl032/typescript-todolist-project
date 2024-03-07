@@ -1,32 +1,71 @@
 import React from "react";
-import { OwnProps } from "../model/Todo";
 import TodoItem from "./TodoItem";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTodos, deleteTodos, editTodos } from "../api/todos";
+import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { Todo } from "../model/Todo";
+import { AxiosResponse } from "axios";
 
-const TodoList: React.FC<OwnProps> = ({ todos, setTodos }) => {
+const TodoList: React.FC = () => {
+  const queryClient = useQueryClient();
+
+  const deleteTodomutation = useMutation<
+    AxiosResponse<Todo[]>,
+    Error,
+    string,
+    void
+  >({
+    mutationFn: deleteTodos,
+    onMutate() {},
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      console.log(data);
+    },
+    onError(err) {
+      console.log(err);
+    },
+  });
+
+  const editTodomutation = useMutation<
+    AxiosResponse<Todo[]>,
+    Error,
+    string,
+    unknown
+  >({
+    mutationFn: editTodos,
+    onMutate() {},
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      console.log(data);
+    },
+    onError(err) {
+      console.log(err.message);
+    },
+  });
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["todos"],
+    queryFn: fetchTodos,
+    select: (data) => data.data,
+  });
+
+  if (isPending) return "Loading...";
+
+  if (error) return "An error has occurred: " + console.log(error.message);
+
   const deleteItem = async (id: string): Promise<void> => {
-    try {
-      await axios.delete(`http://localhost:4000/todos/${id}`);
-    } catch (error) {
-      console.log("삭제 에러 발생:", error.message);
-    }
+    deleteTodomutation.mutate(id);
   };
 
   const toggleItem = async (id: string, isDone: boolean): Promise<void> => {
-    try {
-      const res = await axios.patch(`http://localhost:4000/todos/${id}`, {
-        isDone: !isDone,
-      });
-      console.log("res", res.data);
-    } catch (error) {
-      console.log("토글 에러 발생:", error.message);
-    }
+    editTodomutation.mutate(id, isDone);
   };
 
   return (
     <>
       <div>working</div>
-      {todos.map((item) => {
+      {data?.map((item) => {
         return !item.isDone ? (
           <TodoItem
             key={item.id}
@@ -37,7 +76,7 @@ const TodoList: React.FC<OwnProps> = ({ todos, setTodos }) => {
         ) : null;
       })}
       <div>Done</div>
-      {todos.map((item) => {
+      {data?.map((item) => {
         return item.isDone ? (
           <TodoItem
             key={item.id}

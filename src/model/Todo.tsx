@@ -4,8 +4,3 @@ export interface Todo {
   content: string;
   isDone: boolean;
 }
-
-export interface OwnProps {
-  todos: Todo[];
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-}
