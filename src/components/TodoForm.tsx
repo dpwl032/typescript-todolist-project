@@ -2,23 +2,15 @@ import React from "react";
 import { useState } from "react";
 import TodoList from "./TodoList";
 import { v4 as uuidv4 } from "uuid";
-import axios from "axios";
 import { Todo } from "../model/Todo";
-import { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addTodos } from "../api/todos";
 
 const TodoForm = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const fetchTodos = async (): Promise<void> => {
-    try {
-      const { data } = await axios.get("http://localhost:4000/todos");
-      setTodos(data);
-    } catch (error) {
-      console.log("에러 발생:", error.message);
-    }
-  };
-
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const queryClient = useQueryClient();
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
@@ -32,6 +24,18 @@ const TodoForm = () => {
     }
   };
 
+  const addTodoMutation = useMutation({
+    mutationFn: addTodos,
+    onMutate() {},
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      console.log(data);
+    },
+    onError(err) {
+      console.log(err);
+    },
+  });
+
   const onClickHandler = async (): Promise<void> => {
     const newTodo: Todo = {
       id: uuidv4(),
@@ -39,20 +43,10 @@ const TodoForm = () => {
       content,
       isDone: false,
     };
-
-    try {
-      await axios.post("http://localhost:4000/todos", newTodo);
-      setTodos([...todos, newTodo]);
-      setTitle("");
-      setContent("");
-    } catch (error) {
-      console.log("추가 에러 발생:", error.message);
-    }
+    addTodoMutation.mutate(newTodo);
+    setTitle("");
+    setContent("");
   };
-
-  useEffect(() => {
-    fetchTodos();
-  }, [todos]);
 
   return (
     <>
@@ -61,7 +55,7 @@ const TodoForm = () => {
       내용 :{" "}
       <input type="text" name="content" value={content} onChange={onChange} />
       <button onClick={onClickHandler}>등록</button>
-      <TodoList todos={todos} setTodos={setTodos} />
+      <TodoList />
     </>
   );
 };
