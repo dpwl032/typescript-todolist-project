@@ -7,7 +7,7 @@ import { Todo } from "../model/Todo";
 import { useEffect } from "react";
 
 const TodoForm = () => {
-  const [todos, setTodos] = useState<Todo>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const fetchTodos = async (): Promise<void> => {
     try {
       const { data } = await axios.get("http://localhost:4000/todos");

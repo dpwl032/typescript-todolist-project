@@ -1,10 +1,10 @@
 import React from "react";
-import { Edit, Todo } from "../model/Todo";
+import { Todo } from "../model/Todo";
 
 export interface OwnProps {
   todo: Todo;
   deleteItem: (id: string) => void;
-  toggleItem: (id: string) => void;
+  toggleItem: (id: string, isDone: boolean) => void;
 }
 
 const TodoItem: React.FC<OwnProps> = ({ todo, deleteItem, toggleItem }) => {
@@ -17,12 +17,8 @@ const TodoItem: React.FC<OwnProps> = ({ todo, deleteItem, toggleItem }) => {
 
   const selectToggleItem = () => {
     alert("상태변경하시겠습니까?");
-    const editItem: Edit = {
-      id,
-      isDone,
-    };
 
-    toggleItem(editItem);
+    toggleItem(id, isDone);
   };
 
   return (
