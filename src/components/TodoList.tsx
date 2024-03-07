@@ -18,14 +18,28 @@ const TodoList: React.FC<OwnProps> = ({ todos }) => {
 
   return (
     <>
-      {todos.map((item) => (
-        <TodoItem
-          key={item.id}
-          todo={item}
-          deleteItem={deleteItem}
-          toggleItem={toggleItem}
-        />
-      ))}
+      <div>working</div>
+      {todos.map((item) => {
+        return !item.isDone ? (
+          <TodoItem
+            key={item.id}
+            todo={item}
+            deleteItem={deleteItem}
+            toggleItem={toggleItem}
+          />
+        ) : null;
+      })}
+      <div>Done</div>
+      {todos.map((item) => {
+        return item.isDone ? (
+          <TodoItem
+            key={item.id}
+            todo={item}
+            deleteItem={deleteItem}
+            toggleItem={toggleItem}
+          />
+        ) : null;
+      })}
     </>
   );
 };
