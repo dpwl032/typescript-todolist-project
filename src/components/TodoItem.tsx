@@ -4,7 +4,7 @@ import { Todo } from "../model/Todo";
 export interface OwnProps {
   todo: Todo;
   deleteItem: (id: string) => void;
-  toggleItem: (id: string) => void;
+  toggleItem: (id: string, isDone: boolean) => void;
 }
 
 const TodoItem: React.FC<OwnProps> = ({ todo, deleteItem, toggleItem }) => {
@@ -16,7 +16,9 @@ const TodoItem: React.FC<OwnProps> = ({ todo, deleteItem, toggleItem }) => {
   };
 
   const selectToggleItem = () => {
-    toggleItem(id);
+    alert("상태변경하시겠습니까?");
+
+    toggleItem(id, isDone);
   };
 
   return (
