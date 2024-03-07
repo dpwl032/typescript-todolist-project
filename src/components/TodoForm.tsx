@@ -40,9 +40,6 @@ const TodoForm = () => {
     setContent("");
   };
 
-  const workingTodos = todos.filter((todo) => !todo.isDone);
-  const doneTodos = todos.filter((todo) => todo.isDone);
-
   return (
     <>
       제목 :{" "}
@@ -50,13 +47,7 @@ const TodoForm = () => {
       내용 :{" "}
       <input type="text" name="content" value={content} onChange={onChange} />
       <button onClick={onClickHandler}>등록</button>
-      <div>Working</div>
-      <TodoList todos={workingTodos} />
-      <br />
-      <br />
-      <br />
-      <div>Done</div>
-      <TodoList todos={doneTodos} />
+      <TodoList todos={todos} />
     </>
   );
 };

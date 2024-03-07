@@ -21,14 +21,18 @@ const todosSlice = createSlice({
     deleteTodo: (state, action: PayloadAction<String>) => {
       state.todos = state.todos.filter((item) => item.id !== action.payload);
     },
-    toggleTodo: (state, action: PayloadAction<String | boolean>) => {
-      state.todos = state.todos.map((item) => {
-        if (item.id === action.payload) {
-          return { ...item, isDone: !item.isDone };
-        } else {
-          item;
-        }
-      });
+    toggleTodo: (state, action: PayloadAction<String>) => {
+      // state.todos = state.todos.map((item) => {
+      //   if (item.id === action.payload) {
+      //     console.log({ ...item, isDone: !item.isDone });
+      //     return { ...item, isDone: !item.isDone };
+      //   } else {
+      //     return item;
+      //   }
+      // });
+      state.todos = state.todos.map((item) =>
+        item.id === action.payload ? { ...item, isDone: !item.isDone } : item
+      );
     },
   },
 });
