@@ -7,4 +7,10 @@ export interface Todo {
 
 export interface OwnProps {
   todos: Todo[];
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+}
+
+export interface Edit {
+  id: string;
+  isDone: boolean;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Todo } from "../model/Todo";
+import { Edit, Todo } from "../model/Todo";
 
 export interface OwnProps {
   todo: Todo;
@@ -16,7 +16,13 @@ const TodoItem: React.FC<OwnProps> = ({ todo, deleteItem, toggleItem }) => {
   };
 
   const selectToggleItem = () => {
-    toggleItem(id);
+    alert("상태변경하시겠습니까?");
+    const editItem: Edit = {
+      id,
+      isDone,
+    };
+
+    toggleItem(editItem);
   };
 
   return (
