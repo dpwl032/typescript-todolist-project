@@ -62,7 +62,6 @@ const TodoList: React.FC = () => {
   return (
     <>
       <TodoListWrap>
-        {" "}
         <div>working</div>
         <div>
           {data?.map((item) => {

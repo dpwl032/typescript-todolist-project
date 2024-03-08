@@ -1,16 +1,10 @@
 {
   "todos": [
     {
-      "id": "329e9bbb-ff20-43c7-96a5-0a8f70f955eb",
-      "title": "1",
-      "content": "1",
-      "isDone": false
-    },
-    {
       "id": "64a5dded-efb1-41cc-a4bc-b97e006d80de",
       "title": "ㅋㅋㅋ",
       "content": "ㅋㅋ",
-      "isDone": false
+      "isDone": true
     }
   ]
 }

@@ -65,7 +65,6 @@ const TodoForm = () => {
             />
             <button onClick={onClickHandler}>등록</button>
           </InputWrap>
-
           <TodoList />
         </div>
       </TodoFormWrap>
