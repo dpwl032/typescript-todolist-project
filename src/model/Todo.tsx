@@ -4,3 +4,5 @@ export interface Todo {
   content: string;
   isDone: boolean;
 }
+
+export type EditTodo = Pick<Todo, "id" | "isDone">;
