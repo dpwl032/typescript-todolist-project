@@ -6,6 +6,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { Todo } from "../model/Todo";
 import { AxiosResponse } from "axios";
+import styled from "styled-components";
+import QUERY_KEYS from "../api/keys.constant";
 
 const TodoList: React.FC = () => {
   const queryClient = useQueryClient();
@@ -19,7 +21,7 @@ const TodoList: React.FC = () => {
     mutationFn: deleteTodos,
     onMutate() {},
     onSuccess(data) {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
       console.log(data);
     },
     onError(err) {
@@ -27,16 +29,11 @@ const TodoList: React.FC = () => {
     },
   });
 
-  const editTodomutation = useMutation<
-    AxiosResponse<Todo[]>,
-    Error,
-    string,
-    unknown
-  >({
+  const editTodomutation = useMutation({
     mutationFn: editTodos,
     onMutate() {},
     onSuccess(data) {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
       console.log(data);
     },
     onError(err) {
@@ -45,7 +42,7 @@ const TodoList: React.FC = () => {
   });
 
   const { isPending, error, data } = useQuery({
-    queryKey: ["todos"],
+    queryKey: [QUERY_KEYS.TODOS],
     queryFn: fetchTodos,
     select: (data) => data.data,
   });
@@ -59,35 +56,49 @@ const TodoList: React.FC = () => {
   };
 
   const toggleItem = async (id: string, isDone: boolean): Promise<void> => {
-    editTodomutation.mutate(id, isDone);
+    editTodomutation.mutate({ id, isDone });
   };
 
   return (
     <>
-      <div>working</div>
-      {data?.map((item) => {
-        return !item.isDone ? (
-          <TodoItem
-            key={item.id}
-            todo={item}
-            deleteItem={deleteItem}
-            toggleItem={toggleItem}
-          />
-        ) : null;
-      })}
-      <div>Done</div>
-      {data?.map((item) => {
-        return item.isDone ? (
-          <TodoItem
-            key={item.id}
-            todo={item}
-            deleteItem={deleteItem}
-            toggleItem={toggleItem}
-          />
-        ) : null;
-      })}
+      <TodoListWrap>
+        <div>working</div>
+        <div>
+          {data?.map((item) => {
+            return !item.isDone ? (
+              <TodoItem
+                key={item.id}
+                todo={item}
+                deleteItem={deleteItem}
+                toggleItem={toggleItem}
+              />
+            ) : null;
+          })}
+        </div>
+        <div>Done</div>
+        <div>
+          {data?.map((item) => {
+            return item.isDone ? (
+              <TodoItem
+                key={item.id}
+                todo={item}
+                deleteItem={deleteItem}
+                toggleItem={toggleItem}
+              />
+            ) : null;
+          })}
+        </div>
+      </TodoListWrap>
     </>
   );
 };
 
 export default TodoList;
+
+const TodoListWrap = styled.div`
+  border: 1px solid black;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
