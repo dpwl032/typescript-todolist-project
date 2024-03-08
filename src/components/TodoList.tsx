@@ -8,6 +8,7 @@ import { Todo } from "../model/Todo";
 import { AxiosResponse } from "axios";
 import styled from "styled-components";
 import QUERY_KEYS from "../api/keys.constant";
+import { EditTodo } from "../model/Todo";
 
 const TodoList: React.FC = () => {
   const queryClient = useQueryClient();
@@ -56,7 +57,8 @@ const TodoList: React.FC = () => {
   };
 
   const toggleItem = async (id: string, isDone: boolean): Promise<void> => {
-    editTodomutation.mutate({ id, isDone });
+    const editItem: EditTodo = { id, isDone };
+    editTodomutation.mutate(editItem);
   };
 
   return (
